@@ -197,6 +197,81 @@
       outline: none;
       border-color: #ccc;
     }
+
+    .custom-dropdown {
+      position: relative;
+      width: 100%;
+      margin-bottom: 15px;
+    }
+
+    .dropdown-header {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+
+    .dropdown-header:hover {
+      border-color: #7b1fa2;
+    }
+
+    .dropdown-arrow {
+      font-size: 12px;
+      color: #666;
+      transition: transform 0.3s ease;
+    }
+
+    .dropdown-header.active .dropdown-arrow {
+      transform: rotate(180deg);
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ccc;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .dropdown-content.show {
+      display: block;
+    }
+
+    .dropdown-content label {
+      display: block;
+      padding: 10px;
+      margin: 0;
+      cursor: pointer;
+      border-bottom: 1px solid #f0f0f0;
+      font-weight: normal;
+    }
+
+    .dropdown-content label:last-child {
+      border-bottom: none;
+    }
+
+    .dropdown-content label:hover {
+      background-color: #f8f9fa;
+    }
+
+    .dropdown-content input[type="checkbox"] {
+      margin-right: 8px;
+      width: auto;
+    }
   </style>
 </head>
 <body>
@@ -207,60 +282,65 @@
     <input type="text" id="projectName" name="projectName" placeholder="e.g., B2C Finance Loan Platform" required />
 
     <label for="platform">Platform</label>
-    <select id="platform" name="platform" required>
-      <option value="">Select Platform</option>
-      <option value="Responsive Website">Responsive Website</option>
-      <option value="Android App">Android App</option>
-      <option value="iOS App">iOS App</option>
-      <option value="All">All</option>
-    </select>
+    <div class="custom-dropdown">
+      <div class="dropdown-header" onclick="togglePlatformDropdown()">
+        <span id="platformDisplay">Select Platform</span>
+        <span class="dropdown-arrow">▼</span>
+      </div>
+      <div class="dropdown-content" id="platformDropdown">
+        <label><input type="checkbox" name="platform" value="Responsive Website" /> Responsive Website</label>
+        <label><input type="checkbox" name="platform" value="Android App" /> Android App</label>
+        <label><input type="checkbox" name="platform" value="iOS App" /> iOS App</label>
+        <label><input type="checkbox" name="platform" value="Web App" /> Web App</label>
+      </div>
+    </div>
 
     <label for="features">Key Features</label>
     <textarea id="features" name="features" rows="3" placeholder="Describe the main features of your project (e.g., user authentication, payment processing, dashboard, etc.)"></textarea>
 
     <div class="checkbox-group">
-      <label><input type="checkbox" id="estimateScreens" name="estimateScreens" /> Estimate number of screens (pages of the website)</label>
+      <label><input type="checkbox" id="estimateScreens" name="estimateScreens" />Estimate number of screens</label>
     </div>
 
-    <label for="screenCount">Number of Screens</label>
-    <input type="number" id="screenCount" name="screenCount" min="1" placeholder="Enter total number of screens" required />
-
+    
     <label for="uniquePages">Number of Unique Pages</label>
-    <input type="number" id="uniquePages" name="uniquePages" min="0" placeholder="Enter number of unique page layouts" />
+    
     
     <div class="complexity-breakdown">
       <div style="margin-bottom: 8px; font-size: 12px; color: #666;">
         <strong>Breakdown by complexity level:</strong> Enter the number of pages for each complexity level. The total will be calculated automatically.
       </div>
-      <label for="uniqueEasy">Easy Complexity:</label>
+      <label for="uniqueEasy">Low:</label>
       <input type="number" id="uniqueEasy" name="uniqueEasy" min="0" placeholder="0" />
       
-      <label for="uniqueMedium">Medium Complexity:</label>
+      <label for="uniqueMedium">Medium:</label>
       <input type="number" id="uniqueMedium" name="uniqueMedium" min="0" placeholder="0" />
       
-      <label for="uniqueComplex">Complex:</label>
+      <label for="uniqueComplex">High:</label>
       <input type="number" id="uniqueComplex" name="uniqueComplex" min="0" placeholder="0" />
     </div>
 
     <label for="otherPages">Number of Other Pages</label>
-    <input type="number" id="otherPages" name="otherPages" min="0" placeholder="Enter number of similar pages" />
+    
     
     <div class="complexity-breakdown">
       <div style="margin-bottom: 8px; font-size: 12px; color: #666;">
         <strong>Breakdown by complexity level:</strong> Enter the number of pages for each complexity level. The total will be calculated automatically.
       </div>
-      <label for="otherEasy">Easy Complexity:</label>
+      <label for="otherEasy">Low</label>
       <input type="number" id="otherEasy" name="otherEasy" min="0" placeholder="0" />
       
-      <label for="otherMedium">Medium Complexity:</label>
+      <label for="otherMedium">Medium</label>
       <input type="number" id="otherMedium" name="otherMedium" min="0" placeholder="0" />
       
-      <label for="otherComplex">Complex:</label>
+      <label for="otherComplex">High</label>
       <input type="number" id="otherComplex" name="otherComplex" min="0" placeholder="0" />
     </div>
+    <label for="screenCount">Number of Screens</label>
+    <input type="number" id="screenCount" name="screenCount" min="1" placeholder="Enter total number of screens" required />
 
     <label for="domain">Domain</label>
-    <input type="text" id="domain" name="domain" placeholder="e.g., Finance, E-commerce, Healthcare" />
+    <input type="text" id="domain" name="domain" placeholder="e.g., B2B, B2C, D2B" />
 
     <label for="industry">Industry</label>
     <input type="text" id="industry" name="industry" placeholder="e.g., Financial Services, Technology, Healthcare" />
@@ -318,6 +398,25 @@
   <div id="output"></div>
 
   <script>
+    // Global function for dropdown toggle
+    function togglePlatformDropdown() {
+      const dropdown = document.getElementById('platformDropdown');
+      const header = document.querySelector('.dropdown-header');
+      dropdown.classList.toggle('show');
+      header.classList.toggle('active');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+      const dropdown = document.getElementById('platformDropdown');
+      const header = document.querySelector('.dropdown-header');
+      
+      if (!header.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.classList.remove('show');
+        header.classList.remove('active');
+      }
+    });
+
     document.addEventListener("DOMContentLoaded", function () {
       const form = document.getElementById("estimationForm");
       const outputContainer = document.getElementById("output");
@@ -338,6 +437,28 @@
       const otherEasyInput = document.getElementById("otherEasy");
       const otherMediumInput = document.getElementById("otherMedium");
       const otherComplexInput = document.getElementById("otherComplex");
+
+      // Platform dropdown functionality
+      const platformCheckboxes = document.querySelectorAll('input[name="platform"]');
+      const platformDisplay = document.getElementById('platformDisplay');
+
+      platformCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updatePlatformDisplay);
+      });
+
+      function updatePlatformDisplay() {
+        const selectedPlatforms = Array.from(platformCheckboxes)
+          .filter(cb => cb.checked)
+          .map(cb => cb.value);
+        
+        if (selectedPlatforms.length === 0) {
+          platformDisplay.textContent = 'Select Platform';
+        } else if (selectedPlatforms.length === 1) {
+          platformDisplay.textContent = selectedPlatforms[0];
+        } else {
+          platformDisplay.textContent = `${selectedPlatforms.length} platforms selected`;
+        }
+      }
 
       // Handle screen estimation checkbox
       estimateScreensCheckbox.addEventListener("change", function() {
@@ -559,8 +680,19 @@
           }
         });
 
+        // Validate platform selection
+        const selectedPlatforms = Array.from(platformCheckboxes).filter(cb => cb.checked);
+        const platformDropdown = document.querySelector('.custom-dropdown');
+        
+        if (selectedPlatforms.length === 0) {
+          platformDropdown.style.borderColor = '#ff4444';
+          isValid = false;
+        } else {
+          platformDropdown.style.borderColor = '#ccc';
+        }
+
         if (!isValid) {
-          outputContainer.innerHTML = "<p style='color: #ff4444;'>Please fill in all required fields.</p>";
+          outputContainer.innerHTML = "<p style='color: #ff4444;'>Please fill in all required fields and select at least one platform.</p>";
           return;
         }
 
