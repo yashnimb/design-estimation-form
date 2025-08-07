@@ -29,6 +29,22 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
+    @media (max-width: 768px) {
+      form {
+        margin: 10px;
+        padding: 15px;
+      }
+      
+      .checkbox-group {
+        flex-direction: column;
+        gap: 5px;
+      }
+      
+      .checkbox-group label {
+        margin-bottom: 5px;
+      }
+    }
+
     label {
       display: block;
       margin: 10px 0 5px;
@@ -72,6 +88,51 @@
       background-color: #6a1b9a;
     }
 
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
+
+    .loading.show {
+      display: block;
+    }
+
+    .success-message {
+      text-align: center;
+      padding: 20px;
+      background: #e8f5e8;
+      border-radius: 8px;
+      margin: 20px 0;
+      border: 1px solid #4CAF50;
+    }
+
+    .success-message h3 {
+      color: #2e7d32;
+      margin-bottom: 10px;
+    }
+
+    .success-message button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .success-message button:hover {
+      background: #45a049;
+    }
+
     #output {
       max-width: 800px;
       margin: 40px auto;
@@ -96,6 +157,46 @@
     th {
       background-color: #e1bee7;
     }
+
+    .complexity-breakdown {
+      margin-left: 20px;
+      margin-bottom: 15px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border-left: 3px solid #007bff;
+    }
+
+    .complexity-breakdown label {
+      display: inline-block;
+      margin: 0 10px 0 0;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .complexity-breakdown input {
+      width: 80px;
+      margin-right: 15px;
+      padding: 5px 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .complexity-breakdown input:last-child {
+      margin-right: 0;
+    }
+
+    .disabled-input {
+      opacity: 0.5;
+      background-color: #f5f5f5;
+      cursor: not-allowed;
+    }
+
+    .disabled-input:focus {
+      outline: none;
+      border-color: #ccc;
+    }
   </style>
 </head>
 <body>
@@ -103,29 +204,70 @@
   <h2>Design Estimation Form</h2>
   <form id="estimationForm">
     <label for="projectName">Project Name</label>
-    <input type="text" id="projectName" name="projectName" required />
+    <input type="text" id="projectName" name="projectName" placeholder="e.g., B2C Finance Loan Platform" required />
 
     <label for="platform">Platform</label>
     <select id="platform" name="platform" required>
-      <option value="Web">Web</option>
-      <option value="Mobile">Mobile</option>
-      <option value="Both">Both</option>
+      <option value="">Select Platform</option>
+      <option value="Responsive Website">Responsive Website</option>
+      <option value="Android App">Android App</option>
+      <option value="iOS App">iOS App</option>
+      <option value="All">All</option>
     </select>
 
-    <label for="domain">Domain</label>
-    <input type="text" id="domain" name="domain" />
+    <label for="features">Key Features</label>
+    <textarea id="features" name="features" rows="3" placeholder="Describe the main features of your project (e.g., user authentication, payment processing, dashboard, etc.)"></textarea>
 
-    <label for="industry">Industry</label>
-    <input type="text" id="industry" name="industry" />
+    <div class="checkbox-group">
+      <label><input type="checkbox" id="estimateScreens" name="estimateScreens" /> Estimate number of screens (pages of the website)</label>
+    </div>
 
     <label for="screenCount">Number of Screens</label>
-    <input type="number" id="screenCount" name="screenCount" required />
+    <input type="number" id="screenCount" name="screenCount" min="1" placeholder="Enter total number of screens" required />
 
-    <label for="features">Key Features</label>
-    <textarea id="features" name="features" rows="3"></textarea>
+    <label for="uniquePages">Number of Unique Pages</label>
+    <input type="number" id="uniquePages" name="uniquePages" min="0" placeholder="Enter number of unique page layouts" />
+    
+    <div class="complexity-breakdown">
+      <div style="margin-bottom: 8px; font-size: 12px; color: #666;">
+        <strong>Breakdown by complexity level:</strong> Enter the number of pages for each complexity level. The total will be calculated automatically.
+      </div>
+      <label for="uniqueEasy">Easy Complexity:</label>
+      <input type="number" id="uniqueEasy" name="uniqueEasy" min="0" placeholder="0" />
+      
+      <label for="uniqueMedium">Medium Complexity:</label>
+      <input type="number" id="uniqueMedium" name="uniqueMedium" min="0" placeholder="0" />
+      
+      <label for="uniqueComplex">Complex:</label>
+      <input type="number" id="uniqueComplex" name="uniqueComplex" min="0" placeholder="0" />
+    </div>
+
+    <label for="otherPages">Number of Other Pages</label>
+    <input type="number" id="otherPages" name="otherPages" min="0" placeholder="Enter number of similar pages" />
+    
+    <div class="complexity-breakdown">
+      <div style="margin-bottom: 8px; font-size: 12px; color: #666;">
+        <strong>Breakdown by complexity level:</strong> Enter the number of pages for each complexity level. The total will be calculated automatically.
+      </div>
+      <label for="otherEasy">Easy Complexity:</label>
+      <input type="number" id="otherEasy" name="otherEasy" min="0" placeholder="0" />
+      
+      <label for="otherMedium">Medium Complexity:</label>
+      <input type="number" id="otherMedium" name="otherMedium" min="0" placeholder="0" />
+      
+      <label for="otherComplex">Complex:</label>
+      <input type="number" id="otherComplex" name="otherComplex" min="0" placeholder="0" />
+    </div>
+
+    <label for="domain">Domain</label>
+    <input type="text" id="domain" name="domain" placeholder="e.g., Finance, E-commerce, Healthcare" />
+
+    <label for="industry">Industry</label>
+    <input type="text" id="industry" name="industry" placeholder="e.g., Financial Services, Technology, Healthcare" />
 
     <label for="complexity">Complexity</label>
     <select id="complexity" name="complexity" required>
+      <option value="">Select Complexity Level</option>
       <option value="Low">Low</option>
       <option value="Medium">Medium</option>
       <option value="High">High</option>
@@ -133,38 +275,45 @@
 
     <label>Design Phases</label>
     <div class="checkbox-group">
-      <label><input type="checkbox" name="phases" value="Discovery" /> Discovery</label>
-      <label><input type="checkbox" name="phases" value="Wireframing" /> Wireframing</label>
-      <label><input type="checkbox" name="phases" value="UI Design" /> UI Design</label>
+      <label><input type="checkbox" name="phases" value="Discovery" checked /> Discovery</label>
+      <label><input type="checkbox" name="phases" value="Wireframing" checked /> Wireframing</label>
+      <label><input type="checkbox" name="phases" value="UI Design" checked /> UI Design</label>
       <label><input type="checkbox" name="phases" value="Prototyping" /> Prototyping</label>
     </div>
 
     <label for="branding">Branding Required?</label>
     <select id="branding" name="branding">
-      <option value="Yes">Yes</option>
       <option value="No">No</option>
+      <option value="Yes">Yes</option>
     </select>
 
     <label for="accessibility">Accessibility Support?</label>
     <select id="accessibility" name="accessibility">
-      <option value="Yes">Yes</option>
       <option value="No">No</option>
+      <option value="Yes">Yes</option>
     </select>
 
     <label for="multilingual">Multilingual Support?</label>
     <select id="multilingual" name="multilingual">
-      <option value="Yes">Yes</option>
       <option value="No">No</option>
+      <option value="Yes">Yes</option>
     </select>
 
     <label for="timeline">Expected Timeline (weeks)</label>
-    <input type="number" id="timeline" name="timeline" />
+    <input type="number" id="timeline" name="timeline" min="1" max="52" placeholder="Enter expected timeline in weeks" />
 
     <label for="notes">Client Notes</label>
-    <textarea id="notes" name="notes" rows="3"></textarea>
+    <textarea id="notes" name="notes" rows="3" placeholder="Any additional requirements or special considerations"></textarea>
 
     <button type="submit">Generate Estimation</button>
   </form>
+
+  <div class="loading">
+    <p>🔄 Generating your project plan...</p>
+    <p>Please wait while we process your request.</p>
+  </div>
+
+  <div class="success-message" style="display: none;"></div>
 
   <div id="output"></div>
 
@@ -172,9 +321,248 @@
     document.addEventListener("DOMContentLoaded", function () {
       const form = document.getElementById("estimationForm");
       const outputContainer = document.getElementById("output");
+      const estimateScreensCheckbox = document.getElementById("estimateScreens");
+      const screenCountInput = document.getElementById("screenCount");
+      const uniquePagesInput = document.getElementById("uniquePages");
+      const otherPagesInput = document.getElementById("otherPages");
+      const projectNameInput = document.getElementById("projectName");
+      const featuresInput = document.getElementById("features");
+      const submitButton = document.querySelector("#estimationForm button[type='submit']");
+      const loadingDiv = document.querySelector(".loading");
+      const successMessageDiv = document.querySelector(".success-message");
+
+      // Complexity level inputs
+      const uniqueEasyInput = document.getElementById("uniqueEasy");
+      const uniqueMediumInput = document.getElementById("uniqueMedium");
+      const uniqueComplexInput = document.getElementById("uniqueComplex");
+      const otherEasyInput = document.getElementById("otherEasy");
+      const otherMediumInput = document.getElementById("otherMedium");
+      const otherComplexInput = document.getElementById("otherComplex");
+
+      // Handle screen estimation checkbox
+      estimateScreensCheckbox.addEventListener("change", function() {
+        if (this.checked) {
+          screenCountInput.classList.add("disabled-input");
+          screenCountInput.disabled = true;
+          screenCountInput.value = ""; // Clear value
+          
+          uniquePagesInput.classList.add("disabled-input");
+          uniquePagesInput.disabled = true;
+          uniquePagesInput.value = ""; // Clear value
+          
+          otherPagesInput.classList.add("disabled-input");
+          otherPagesInput.disabled = true;
+          otherPagesInput.value = ""; // Clear value
+          
+          // Also disable complexity breakdown inputs
+          uniqueEasyInput.disabled = true;
+          uniqueMediumInput.disabled = true;
+          uniqueComplexInput.disabled = true;
+          otherEasyInput.disabled = true;
+          otherMediumInput.disabled = true;
+          otherComplexInput.disabled = true;
+          
+          estimateScreenCount();
+        } else {
+          screenCountInput.classList.remove("disabled-input");
+          screenCountInput.disabled = false;
+          screenCountInput.value = "";
+          
+          uniquePagesInput.classList.remove("disabled-input");
+          uniquePagesInput.disabled = false;
+          uniquePagesInput.value = "";
+          
+          otherPagesInput.classList.remove("disabled-input");
+          otherPagesInput.disabled = false;
+          otherPagesInput.value = "";
+          
+          // Re-enable complexity breakdown inputs
+          uniqueEasyInput.disabled = false;
+          uniqueMediumInput.disabled = false;
+          uniqueComplexInput.disabled = false;
+          otherEasyInput.disabled = false;
+          otherMediumInput.disabled = false;
+          otherComplexInput.disabled = false;
+        }
+      });
+
+      // Handle unique pages and other pages calculation
+      uniquePagesInput.addEventListener("input", updateTotalScreens);
+      otherPagesInput.addEventListener("input", updateTotalScreens);
+
+      // Handle complexity level calculations
+      uniqueEasyInput.addEventListener("input", updateUniquePagesTotal);
+      uniqueMediumInput.addEventListener("input", updateUniquePagesTotal);
+      uniqueComplexInput.addEventListener("input", updateUniquePagesTotal);
+      
+      otherEasyInput.addEventListener("input", updateOtherPagesTotal);
+      otherMediumInput.addEventListener("input", updateOtherPagesTotal);
+      otherComplexInput.addEventListener("input", updateOtherPagesTotal);
+
+      // Auto-distribute complexity when main totals are entered
+      uniquePagesInput.addEventListener("blur", autoDistributeUniqueComplexity);
+      otherPagesInput.addEventListener("blur", autoDistributeOtherComplexity);
+
+      function updateTotalScreens() {
+        const uniquePages = parseInt(uniquePagesInput.value) || 0;
+        const otherPages = parseInt(otherPagesInput.value) || 0;
+        screenCountInput.value = uniquePages + otherPages;
+      }
+
+      function updateUniquePagesTotal() {
+        const easy = parseInt(uniqueEasyInput.value) || 0;
+        const medium = parseInt(uniqueMediumInput.value) || 0;
+        const complex = parseInt(uniqueComplexInput.value) || 0;
+        const total = easy + medium + complex;
+        uniquePagesInput.value = total;
+        updateTotalScreens();
+        
+        // Visual feedback
+        const breakdownDiv = uniqueEasyInput.closest('.complexity-breakdown');
+        if (total > 0) {
+          breakdownDiv.style.borderLeftColor = '#28a745';
+        } else {
+          breakdownDiv.style.borderLeftColor = '#007bff';
+        }
+      }
+
+      function updateOtherPagesTotal() {
+        const easy = parseInt(otherEasyInput.value) || 0;
+        const medium = parseInt(otherMediumInput.value) || 0;
+        const complex = parseInt(otherComplexInput.value) || 0;
+        const total = easy + medium + complex;
+        otherPagesInput.value = total;
+        updateTotalScreens();
+        
+        // Visual feedback
+        const breakdownDiv = otherEasyInput.closest('.complexity-breakdown');
+        if (total > 0) {
+          breakdownDiv.style.borderLeftColor = '#28a745';
+        } else {
+          breakdownDiv.style.borderLeftColor = '#007bff';
+        }
+      }
+
+      function autoDistributeUniqueComplexity() {
+        const total = parseInt(uniquePagesInput.value) || 0;
+        if (total > 0) {
+          // Simple distribution: 40% easy, 40% medium, 20% complex
+          const easy = Math.round(total * 0.4);
+          const medium = Math.round(total * 0.4);
+          const complex = total - easy - medium;
+          
+          uniqueEasyInput.value = easy;
+          uniqueMediumInput.value = medium;
+          uniqueComplexInput.value = complex;
+          
+          updateUniquePagesTotal();
+        }
+      }
+
+      function autoDistributeOtherComplexity() {
+        const total = parseInt(otherPagesInput.value) || 0;
+        if (total > 0) {
+          // Simple distribution: 40% easy, 40% medium, 20% complex
+          const easy = Math.round(total * 0.4);
+          const medium = Math.round(total * 0.4);
+          const complex = total - easy - medium;
+          
+          otherEasyInput.value = easy;
+          otherMediumInput.value = medium;
+          otherComplexInput.value = complex;
+          
+          updateOtherPagesTotal();
+        }
+      }
+
+      function estimateScreenCount() {
+        const projectName = projectNameInput.value.toLowerCase();
+        const features = featuresInput.value.toLowerCase();
+        
+        let estimatedScreens = 0;
+        let matched = false;
+        
+        // Base screens for common project types
+        if (projectName.includes("ecommerce") || projectName.includes("shop") || projectName.includes("store")) {
+          estimatedScreens = 15;
+          matched = true;
+        } else if (projectName.includes("blog") || projectName.includes("news")) {
+          estimatedScreens = 8;
+          matched = true;
+        } else if (projectName.includes("portfolio") || projectName.includes("personal")) {
+          estimatedScreens = 6;
+          matched = true;
+        } else if (projectName.includes("dashboard") || projectName.includes("admin")) {
+          estimatedScreens = 12;
+          matched = true;
+        }
+
+        // Add screens based on features
+        const featureKeywords = {
+          "user authentication": 3,
+          "login": 2,
+          "registration": 2,
+          "profile": 2,
+          "dashboard": 3,
+          "admin": 4,
+          "payment": 3,
+          "checkout": 2,
+          "cart": 1,
+          "search": 1,
+          "filter": 1,
+          "contact": 1,
+          "about": 1,
+          "blog": 3,
+          "news": 2,
+          "gallery": 2,
+          "portfolio": 3,
+          "testimonials": 1,
+          "reviews": 2,
+          "booking": 3,
+          "calendar": 2,
+          "chat": 2,
+          "messaging": 3,
+          "notification": 1,
+          "settings": 2,
+          "help": 1,
+          "faq": 1
+        };
+
+        let featureMatched = false;
+        for (const [keyword, screens] of Object.entries(featureKeywords)) {
+          if (features.includes(keyword)) {
+            estimatedScreens += screens;
+            featureMatched = true;
+          }
+        }
+
+        if (matched || featureMatched) {
+          screenCountInput.value = estimatedScreens;
+        } else {
+          screenCountInput.value = "";
+        }
+      }
 
       form.addEventListener("submit", async function (event) {
         event.preventDefault();
+
+        // Validate required fields
+        const requiredFields = form.querySelectorAll('[required]');
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+          if (!field.value.trim()) {
+            field.style.borderColor = '#ff4444';
+            isValid = false;
+          } else {
+            field.style.borderColor = '#ccc';
+          }
+        });
+
+        if (!isValid) {
+          outputContainer.innerHTML = "<p style='color: #ff4444;'>Please fill in all required fields.</p>";
+          return;
+        }
 
         const formData = new FormData(form);
         const data = {};
@@ -187,6 +575,13 @@
           }
         });
 
+        // Show loading state
+        submitButton.disabled = true;
+        submitButton.textContent = "Generating...";
+        loadingDiv.style.display = "block";
+        successMessageDiv.style.display = "none";
+        outputContainer.innerHTML = ""; // Clear previous output
+
         try {
           const response = await fetch("https://y4sh20.app.n8n.cloud/webhook/f3e58583-27ea-4654-8cf3-862b4a468b04", {
             method: "POST",
@@ -194,29 +589,67 @@
             body: JSON.stringify(data)
           });
 
-          const markdown = await response.text();
-          outputContainer.innerHTML = ""; // Clear previous output
+          const htmlContent = await response.text();
 
-          // Extract markdown tables
-          const tables = Array.from(markdown.matchAll(/^\|(.+\|)+\n\|([-:\s|]+)\n((\|.*\n)+)/gm)).map(match => match[0]);
+          // Check if the response is HTML (contains DOCTYPE or html tag)
+          if (htmlContent.includes('<!DOCTYPE html>') || htmlContent.includes('<html')) {
+            // Create a new window to display the HTML content
+            const newWindow = window.open('', '_blank');
+            
+            if (newWindow) {
+              newWindow.document.write(htmlContent);
+              newWindow.document.close();
+              
+              // Show success message
+              successMessageDiv.innerHTML = `
+                <h3>✅ Project Plan Generated Successfully!</h3>
+                <p>A new window has opened with your detailed project plan.</p>
+                <button onclick="window.open('', '_blank').document.write('${htmlContent.replace(/'/g, "\\'")}')">
+                  Open Project Plan Again
+                </button>
+              `;
+            } else {
+              // Popup was blocked, show alternative
+              successMessageDiv.innerHTML = `
+                <h3>✅ Project Plan Generated Successfully!</h3>
+                <p>Your project plan is ready! Click the button below to view it.</p>
+                <button onclick="window.open('', '_blank').document.write('${htmlContent.replace(/'/g, "\\'")}')">
+                  View Project Plan
+                </button>
+                <p style="font-size: 12px; margin-top: 10px; color: #666;">
+                  If the window doesn't open, please allow popups for this site and try again.
+                </p>
+              `;
+            }
+            
+            successMessageDiv.style.display = "block";
+          } else {
+            // Fallback: try to parse as markdown tables (original logic)
+            const tables = Array.from(htmlContent.matchAll(/^\|(.+\|)+\n\|([-:\s|]+)\n((\|.*\n)+)/gm)).map(match => match[0]);
 
-          if (tables.length === 0) {
-            outputContainer.innerHTML = "<p>No tables found in AI response.</p>";
-            return;
+            if (tables.length === 0) {
+              outputContainer.innerHTML = "<p>No tables found in AI response.</p>";
+              return;
+            }
+
+            tables.forEach(mdTable => {
+              const htmlTable = markdownToHTMLTable(mdTable);
+              const wrapper = document.createElement("div");
+              wrapper.innerHTML = htmlTable;
+              wrapper.style.marginBottom = "2rem";
+              outputContainer.appendChild(wrapper);
+            });
           }
-
-          tables.forEach(mdTable => {
-            const htmlTable = markdownToHTMLTable(mdTable);
-            const wrapper = document.createElement("div");
-            wrapper.innerHTML = htmlTable;
-            wrapper.style.marginBottom = "2rem";
-            outputContainer.appendChild(wrapper);
-          });
 
           form.reset(); // Reset form
         } catch (error) {
           console.error("Error fetching AI response:", error);
-          outputContainer.innerHTML = "<p>Error fetching AI response.</p>";
+          outputContainer.innerHTML = "<p>Error fetching AI response. Please try again.</p>";
+        } finally {
+          // Reset loading state
+          submitButton.disabled = false;
+          submitButton.textContent = "Generate Estimation";
+          loadingDiv.style.display = "none";
         }
       });
 
@@ -242,4 +675,3 @@
   </script>
 </body>
 </html>
-
