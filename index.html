@@ -272,6 +272,14 @@
       margin-right: 8px;
       width: auto;
     }
+
+    /* Add this CSS inside your <style> tag */
+    .faded-section {
+      pointer-events: none;
+      opacity: 0.5;
+      filter: grayscale(0.2);
+      transition: opacity 0.3s, filter 0.3s;
+    }
   </style>
 </head>
 <body>
@@ -298,60 +306,53 @@
     <label for="features">Key Features</label>
     <textarea id="features" name="features" rows="3" placeholder="Describe the main features of your project (e.g., user authentication, payment processing, dashboard, etc.)"></textarea>
 
-    <div class="checkbox-group">
-      <label><input type="checkbox" id="estimateScreens" name="estimateScreens" />Estimate number of screens</label>
+    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+      <label style="margin: 0;">
+        <input type="checkbox" id="estimateScreens" name="estimateScreens" />
+        Auto Estimate Number of screens
+      </label>
     </div>
 
-    
-    <label for="uniquePages">Number of Unique Pages</label>
-    
-    
-    <div class="complexity-breakdown">
-      <div style="margin-bottom: 8px; font-size: 12px; color: #666;">
-        <strong>Breakdown by complexity level:</strong> Enter the number of pages for each complexity level. The total will be calculated automatically.
+    <h2 style="margin-top: 10px; margin-bottom: 10px; text-align: left;">Screen Estimation</h2>
+
+    <div id="screensSection">
+      <label for="uniquePages">Number of Unique Screens</label>
+      <div class="complexity-breakdown">
+        <div style="margin-bottom: 8px; font-size: 12px; color: #666;">
+          <strong>Breakdown by complexity level:</strong> Enter the number of pages for each complexity level. The total will be calculated automatically.
+        </div>
+        <label for="uniqueEasy">Low:</label>
+        <input type="number" id="uniqueEasy" name="uniqueEasy" min="0" placeholder="0" />
+        <label for="uniqueMedium">Medium:</label>
+        <input type="number" id="uniqueMedium" name="uniqueMedium" min="0" placeholder="0" />
+        <label for="uniqueComplex">High:</label>
+        <input type="number" id="uniqueComplex" name="uniqueComplex" min="0" placeholder="0" />
       </div>
-      <label for="uniqueEasy">Low:</label>
-      <input type="number" id="uniqueEasy" name="uniqueEasy" min="0" placeholder="0" />
-      
-      <label for="uniqueMedium">Medium:</label>
-      <input type="number" id="uniqueMedium" name="uniqueMedium" min="0" placeholder="0" />
-      
-      <label for="uniqueComplex">High:</label>
-      <input type="number" id="uniqueComplex" name="uniqueComplex" min="0" placeholder="0" />
+
+      <label for="otherPages">Number of Other Screens</label>
+      <div class="complexity-breakdown">
+        <div style="margin-bottom: 8px; font-size: 12px; color: #666;">
+          <strong>Breakdown by complexity level:</strong> Enter the number of pages for each complexity level. The total will be calculated automatically.
+        </div>
+        <label for="otherEasy">Low</label>
+        <input type="number" id="otherEasy" name="otherEasy" min="0" placeholder="0" />
+        <label for="otherMedium">Medium</label>
+        <input type="number" id="otherMedium" name="otherMedium" min="0" placeholder="0" />
+        <label for="otherComplex">High</label>
+        <input type="number" id="otherComplex" name="otherComplex" min="0" placeholder="0" />
+      </div>
     </div>
 
-    <label for="otherPages">Number of Other Pages</label>
-    
-    
-    <div class="complexity-breakdown">
-      <div style="margin-bottom: 8px; font-size: 12px; color: #666;">
-        <strong>Breakdown by complexity level:</strong> Enter the number of pages for each complexity level. The total will be calculated automatically.
-      </div>
-      <label for="otherEasy">Low</label>
-      <input type="number" id="otherEasy" name="otherEasy" min="0" placeholder="0" />
-      
-      <label for="otherMedium">Medium</label>
-      <input type="number" id="otherMedium" name="otherMedium" min="0" placeholder="0" />
-      
-      <label for="otherComplex">High</label>
-      <input type="number" id="otherComplex" name="otherComplex" min="0" placeholder="0" />
-    </div>
-    <label for="screenCount">Number of Screens</label>
-    <input type="number" id="screenCount" name="screenCount" min="1" placeholder="Enter total number of screens" required />
+    <label for="screenCount">Total Screens</label>
+    <input type="number" id="screenCount" name="screenCount" min="1" placeholder="Enter total number of screens" required readonly />
 
     <label for="domain">Domain</label>
-    <input type="text" id="domain" name="domain" placeholder="e.g., B2B, B2C, D2B" />
+    <input type="text" id="domain" name="domain" placeholder="e.g., B2B, B2C, D2C" />
 
     <label for="industry">Industry</label>
     <input type="text" id="industry" name="industry" placeholder="e.g., Financial Services, Technology, Healthcare" />
 
-    <label for="complexity">Complexity</label>
-    <select id="complexity" name="complexity" required>
-      <option value="">Select Complexity Level</option>
-      <option value="Low">Low</option>
-      <option value="Medium">Medium</option>
-      <option value="High">High</option>
-    </select>
+
 
     <label>Design Phases</label>
     <div class="checkbox-group">
@@ -462,50 +463,54 @@
 
       // Handle screen estimation checkbox
       estimateScreensCheckbox.addEventListener("change", function() {
+        const screensSection = document.getElementById("screensSection");
         if (this.checked) {
+          screensSection.classList.add("faded-section");
           screenCountInput.classList.add("disabled-input");
           screenCountInput.disabled = true;
-          screenCountInput.value = ""; // Clear value
-          
-          uniquePagesInput.classList.add("disabled-input");
-          uniquePagesInput.disabled = true;
-          uniquePagesInput.value = ""; // Clear value
-          
-          otherPagesInput.classList.add("disabled-input");
-          otherPagesInput.disabled = true;
-          otherPagesInput.value = ""; // Clear value
-          
-          // Also disable complexity breakdown inputs
-          uniqueEasyInput.disabled = true;
-          uniqueMediumInput.disabled = true;
-          uniqueComplexInput.disabled = true;
-          otherEasyInput.disabled = true;
-          otherMediumInput.disabled = true;
-          otherComplexInput.disabled = true;
-          
-          estimateScreenCount();
+          screenCountInput.value = "";
+
+          // Disable all number inputs inside screensSection
+          const allInputs = screensSection.querySelectorAll("input[type='number']");
+          allInputs.forEach(input => {
+            input.value = "";
+            input.disabled = true;
+            input.classList.add("disabled-input");
+          });
         } else {
+          screensSection.classList.remove("faded-section");
           screenCountInput.classList.remove("disabled-input");
           screenCountInput.disabled = false;
-          screenCountInput.value = "";
-          
-          uniquePagesInput.classList.remove("disabled-input");
-          uniquePagesInput.disabled = false;
-          uniquePagesInput.value = "";
-          
-          otherPagesInput.classList.remove("disabled-input");
-          otherPagesInput.disabled = false;
-          otherPagesInput.value = "";
-          
-          // Re-enable complexity breakdown inputs
-          uniqueEasyInput.disabled = false;
-          uniqueMediumInput.disabled = false;
-          uniqueComplexInput.disabled = false;
-          otherEasyInput.disabled = false;
-          otherMediumInput.disabled = false;
-          otherComplexInput.disabled = false;
+
+          // Enable all number inputs inside screensSection
+          const allInputs = screensSection.querySelectorAll("input[type='number']");
+          allInputs.forEach(input => {
+            input.disabled = false;
+            input.classList.remove("disabled-input");
+          });
         }
       });
+
+      // Update total screens to always show sum of all above inputs
+      function updateTotalScreens() {
+        const uniqueEasy = parseInt(uniqueEasyInput.value) || 0;
+        const uniqueMedium = parseInt(uniqueMediumInput.value) || 0;
+        const uniqueComplex = parseInt(uniqueComplexInput.value) || 0;
+        const otherEasy = parseInt(otherEasyInput.value) || 0;
+        const otherMedium = parseInt(otherMediumInput.value) || 0;
+        const otherComplex = parseInt(otherComplexInput.value) || 0;
+
+        const totalScreens = uniqueEasy + uniqueMedium + uniqueComplex + otherEasy + otherMedium + otherComplex;
+        screenCountInput.value = totalScreens > 0 ? totalScreens : "";
+      }
+
+      // Add event listeners for all complexity inputs
+      uniqueEasyInput.addEventListener("input", updateTotalScreens);
+      uniqueMediumInput.addEventListener("input", updateTotalScreens);
+      uniqueComplexInput.addEventListener("input", updateTotalScreens);
+      otherEasyInput.addEventListener("input", updateTotalScreens);
+      otherMediumInput.addEventListener("input", updateTotalScreens);
+      otherComplexInput.addEventListener("input", updateTotalScreens);
 
       // Handle unique pages and other pages calculation
       uniquePagesInput.addEventListener("input", updateTotalScreens);
@@ -525,9 +530,15 @@
       otherPagesInput.addEventListener("blur", autoDistributeOtherComplexity);
 
       function updateTotalScreens() {
-        const uniquePages = parseInt(uniquePagesInput.value) || 0;
-        const otherPages = parseInt(otherPagesInput.value) || 0;
-        screenCountInput.value = uniquePages + otherPages;
+        const uniqueEasy = parseInt(uniqueEasyInput.value) || 0;
+        const uniqueMedium = parseInt(uniqueMediumInput.value) || 0;
+        const uniqueComplex = parseInt(uniqueComplexInput.value) || 0;
+        const otherEasy = parseInt(otherEasyInput.value) || 0;
+        const otherMedium = parseInt(otherMediumInput.value) || 0;
+        const otherComplex = parseInt(otherComplexInput.value) || 0;
+
+        const totalScreens = uniqueEasy + uniqueMedium + uniqueComplex + otherEasy + otherMedium + otherComplex;
+        screenCountInput.value = totalScreens > 0 ? totalScreens : "";
       }
 
       function updateUniquePagesTotal() {
